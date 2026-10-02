@@ -1,62 +1,182 @@
-# skills
+# Agent Skills
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+Reusable **Agent Skills for AI coding agents and AI assistants**.
 
-Reusable instructions for AI coding agents — the rules that decide what gets written and what gets built, written down so every session follows the same standard.
-
-These are not prompts to paste into a chat window. They are [skills](https://code.claude.com/docs/en/skills): folders with a `SKILL.md` that the agent loads when the task matches its description, then follows.
+This repository provides small, focused `SKILL.md` instruction sets for tasks such as **UI design, UX review, technical writing, and human-centered writing**. Skills are designed to work with skills-compatible agents and can be reused across projects.
 
 ## Skills
 
-| Skill | What it does | Use it when |
-|---|---|---|
-| [design-guide](design-guide/SKILL.md) | Design rules for UI. Solve information, hierarchy, layout, and interaction first, decoration last. Reuse the project's existing components, tokens, and icons. | Designing or reviewing a screen, choosing a layout, deciding whether something needs a card, border, shadow, or icon. |
-| [human-writing](human-writing/SKILL.md) | Writing rules. Remove filler, hype, padding, and manufactured tone. Prefer concrete facts. Never invent personal experience. | Writing or rewriting anything user-facing — replies, docs, issues, PR text, commits, translations. |
+### [`design-guide`](./design-guide/)
 
-Both skills share one stance: the default answer to "this looks empty / unfinished / not thorough enough" is to leave it alone, not to add another card, badge, or paragraph.
+An **AI UI design and UX review skill** for creating cleaner, more consistent interfaces.
 
-## Install
+It guides AI agents through:
 
-Skills are plain folders. Put each one where your agent looks for skills — symlink it if you want to keep editing this checkout, copy it if you want a frozen copy.
+* UI hierarchy and visual structure
+* Layout, spacing, and composition
+* Interaction and usability
+* Visual consistency and component reuse
+* Design review and refinement
+* Avoiding unnecessary UI elements and visual clutter
 
-The shared location is `~/.agents/skills/<name>/`. Agents that read it — [zlogic](https://zlogic.run), Codex, and others — pick these skills up from there.
+Use it when asking an AI coding agent to **design, review, refine, or implement a user interface**.
+
+### [`human-writing`](./human-writing/)
+
+A **writing skill for AI agents** that helps produce clear, specific, natural-sounding text without generic AI filler.
+
+It covers:
+
+* User-facing product copy
+* Technical writing
+* Documentation
+* UI text and microcopy
+* Rewriting and editing
+* Translation and localization
+* Avoiding repetitive or artificial AI writing patterns
+
+Use it when an AI agent needs to **write, rewrite, translate, or polish text**.
+
+## Why Agent Skills?
+
+Agent Skills are reusable instruction sets that extend the capabilities of AI agents without embedding task-specific rules directly into a project prompt.
+
+Each skill is a self-contained directory with a `SKILL.md` file containing YAML frontmatter and instructions. A compatible agent can discover the skill and load it when its description matches the current task.
+
+This makes skills:
+
+* **Reusable** across projects
+* **Version-controlled** with Git
+* **Portable** between compatible AI agents
+* **Focused** on a specific task or workflow
+* **Composable** with other agent skills
+
+The goal is not to make agents generate more. It is to help them make better decisions about **what to do and what not to do**.
+
+## Installation
+
+The easiest way to install a skill from this repository is with the [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
-ln -s "$PWD/design-guide"  ~/.agents/skills/design-guide
+npx skills add zlogic-labs/skills
+```
+
+Install a specific skill:
+
+```bash
+npx skills add zlogic-labs/skills --skill design-guide
+```
+
+```bash
+npx skills add zlogic-labs/skills --skill human-writing
+```
+
+Install all skills:
+
+```bash
+npx skills add zlogic-labs/skills --all
+```
+
+You can also install the skills manually by copying or symlinking them into the directory used by your AI agent.
+
+For example, agents using the shared `.agents/skills` location can use:
+
+```bash
+ln -s "$PWD/design-guide" ~/.agents/skills/design-guide
 ln -s "$PWD/human-writing" ~/.agents/skills/human-writing
 ```
 
-Claude Code uses its own directory instead, `~/.claude/skills/<name>/` for personal and `.claude/skills/<name>/` per project. Link there too if you use it:
+Claude Code uses its own skill directory:
 
 ```bash
-ln -s "$PWD/design-guide"  ~/.claude/skills/design-guide
+ln -s "$PWD/design-guide" ~/.claude/skills/design-guide
 ln -s "$PWD/human-writing" ~/.claude/skills/human-writing
 ```
 
-Both at once is fine — the agent only reads the folder. See [Skills in Claude Code](https://code.claude.com/docs/en/skills) for that client's specifics.
+Other AI coding agents may use different skill directories.
 
-Restart the agent after installing. The skill loads on its own when a task matches its description; type `/` to invoke it by name.
+## Supported AI Agents
 
-## Layout
+Agent Skills are designed for compatible AI coding agents and AI assistants.
+
+Depending on the agent, skills can be installed into agent-specific directories such as:
+
+* Claude Code
+* Codex
+* Cursor
+* GitHub Copilot
+* Gemini CLI
+* OpenCode
+* Other Agent Skills-compatible tools
+
+Installation paths vary by agent. Use the agent's documentation or the Skills CLI to install skills automatically.
+
+## How Skills Work
+
+A skill is a directory containing a `SKILL.md` file:
+
+```text
+design-guide/
+└── SKILL.md
+```
+
+The file contains YAML frontmatter such as:
+
+```yaml
+---
+name: design-guide
+description: Guidelines for AI agents designing and reviewing user interfaces.
+---
+```
+
+The `description` helps an AI agent determine when the skill is relevant. The agent then loads the skill instructions when the task matches its intended use.
+
+Skills can also include supporting files such as:
+
+```text
+skill-name/
+├── SKILL.md
+├── references/
+├── scripts/
+└── assets/
+```
+
+Only add supporting files when they are needed by the skill.
+
+## Design Philosophy
+
+The skills in this repository share a simple principle:
+
+> When something looks unfinished, don't automatically add another card, badge, section, or paragraph. Fix the underlying problem first.
+
+Good agent behavior is not about producing more output. It is about making better decisions, preserving hierarchy, and knowing when **not** to add something.
+
+## Repository Structure
 
 ```text
 skills/
 ├── design-guide/
-│   └── SKILL.md      26 rules: hierarchy, restraint, reuse, review checklist
+│   └── SKILL.md
 ├── human-writing/
-│   └── SKILL.md      21 rules: filler, specificity, voice, translation, final check
+│   └── SKILL.md
 ├── LICENSE
 └── README.md
 ```
 
-Each `SKILL.md` starts with YAML frontmatter carrying `name` and `description`. The description is what the agent matches against, so it holds the trigger conditions; the body is what it follows once loaded.
+Each skill is independent and can be installed without installing the rest of the repository.
 
 ## Contributing
 
-Add a skill as a top-level folder with its own `SKILL.md`. Keep the description specific — it decides when the skill fires.
+To add a new Agent Skill:
 
-The rule when editing these files: describe the behavior, don't restate it. If a section can be deleted without losing a constraint, delete it.
+1. Create a top-level directory for the skill.
+2. Add a `SKILL.md` with YAML frontmatter.
+3. Give the skill a specific `name` and `description`.
+4. Keep the skill focused on a well-defined task or workflow.
+5. Add supporting references, scripts, or assets only when necessary.
+
+The `description` should clearly explain **what the skill does and when an AI agent should use it**.
 
 ## License
 
-[Apache License 2.0](LICENSE)
+Apache License 2.0

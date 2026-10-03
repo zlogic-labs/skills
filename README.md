@@ -37,6 +37,21 @@ It covers:
 
 Use it when an AI agent needs to **write, rewrite, translate, or polish text**.
 
+### [`skill-writer`](./skill-writer/)
+
+An **Agent Skill for authoring Agent Skills** — turning requirements, notes, workflows, or postmortems into an executable `SKILL.md`.
+
+It covers:
+
+* The frontmatter contract a `SKILL.md` must satisfy — `name`, `description`, and the body size threshold
+* Extracting one current workflow from raw source material
+* Writing every step as action, verification, and recovery
+* Marking user confirmation points, unusable states, and hard constraints
+* Compressing away debugging history, background, and duplicated rules
+* Simulating execution to find every point where an Agent would have to guess
+
+Use it when an AI agent needs to **write, restructure, or trim a Skill**.
+
 ## Why Agent Skills?
 
 Agent Skills are reusable instruction sets that extend the capabilities of AI agents without embedding task-specific rules directly into a project prompt.
@@ -159,6 +174,9 @@ skills/
 │   └── SKILL.md
 ├── human-writing/
 │   └── SKILL.md
+├── skill-writer/
+│   ├── SKILL.md
+│   └── README.md
 ├── LICENSE
 └── README.md
 ```

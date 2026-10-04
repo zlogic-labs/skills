@@ -1,6 +1,6 @@
 ---
 name: design-guide
-description: UI/UX design rules for agents building interfaces — hierarchy before decoration, restraint with cards, borders, backgrounds, icons, badges, radii and shadows, reuse of the project's existing components, tokens and icon library, and no invented features. Use when designing or reviewing a screen, choosing layout and components, or when an interface looks like a generic AI dashboard.
+description: UI/UX design rules for agents building interfaces — hierarchy before decoration, restraint with cards, borders, backgrounds, icons, badges, radii and shadows, reuse of the project's existing components, tokens and icon library, and no invented features, and prototype-first validation for uncertain layouts, information architecture, interactions, or responsive behavior. Use when designing or reviewing a screen, choosing layout and components, when a design decision is uncertain, or when an interface looks like a generic AI dashboard.
 ---
 
 # Design Guide
@@ -561,7 +561,7 @@ unless they are actually part of the product requirements.
 
 # 22. Prioritize Content
 
-Establish clear levels of importance:
+Establish clear levels of importance.
 
 ### Primary
 
@@ -697,7 +697,89 @@ Can spacing, typography, alignment, and contrast establish the hierarchy?
 
 Which existing components and patterns should be reused?
 
-### Step 9 — Decoration
+### Step 9 — Decide Whether to Prototype
+
+Create a prototype **before final implementation** if any prototype trigger applies:
+
+* The information architecture is new.
+* The project has no comparable existing interface to follow.
+* There are two or more plausible layout approaches.
+* The interaction contains multiple states, branches, or transitions.
+* Responsive behavior is not yet clear.
+* Content density or realistic content length may materially affect the layout.
+* The user explicitly asks for a prototype, demo, mockup, or preview.
+* The agent is uncertain about a structural or interaction decision that can be tested cheaply.
+
+**If any trigger applies, a prototype is required.**
+
+If none applies and the design follows an established project pattern with no meaningful uncertainty, proceed without a prototype.
+
+### Step 10 — Prototype and Review
+
+Create the prototype and make it directly previewable.
+
+Default to a **single self-contained HTML file** (for example `prototype.html`) using HTML, CSS, and minimal JavaScript. Use the project's existing frontend stack only when that materially improves previewing or when the prototype depends on existing application behavior.
+
+Keep it lightweight. Do not build production architecture, introduce new dependencies, or reproduce the entire application.
+
+Use realistic content — real labels, numbers, filenames, long text, and the empty or error states — whenever content length or density affects the layout.
+
+Make the important interactions clickable when interaction is part of the design question.
+
+Cover the **smallest surface that can answer the design question**. Do not prototype unrelated screens or build a second version of the product.
+
+Serve it locally and report the exact URL:
+
+```bash
+python -m http.server <port>
+```
+
+If the prototype is a single file the user can open directly, skip the server and give the file path instead.
+
+Then ask the user to review:
+
+* Is the overall structure correct?
+* Is the information in the right place?
+* Is anything missing?
+* Is anything unnecessary?
+* Is the primary action obvious?
+* Does the interaction behave as expected?
+* Are important states or edge cases missing?
+* Does anything feel harder to understand than the existing interface?
+
+Do not treat showing the prototype as confirmation.
+
+If the user identifies a problem, revise the prototype and repeat the review.
+
+If the user confirms the design, continue to Step 11.
+
+If the user does not respond, **do not treat the prototype as approved**. Wait for their review. Continue only if the user explicitly said to skip the prototype or to implement it directly; silence and ambiguity are not permission.
+
+### Step 11 — Implementation
+
+After the prototype has been confirmed, implement the final interface.
+
+Preserve the structure, information hierarchy, and interaction decisions confirmed during review.
+
+Do not introduce new structural or interaction changes during implementation without validating them first when they materially change the reviewed design.
+
+Reuse the project's existing:
+
+* Components
+* Design tokens
+* Icons
+* Typography
+* Spacing
+* Interaction patterns
+* Accessibility patterns
+
+Do not treat the prototype as a separate product or create unnecessary infrastructure just to reproduce it.
+
+After implementation, remove prototype-only files by default.
+
+**Keep the prototype only if the user explicitly asks to keep it or it is intentionally being used as a maintained artifact.**
+
+### Step 12 — Decoration
 
 Only now consider:
 
@@ -715,7 +797,7 @@ If the earlier steps already solve the problem, the final step may require nothi
 
 # 26. Final Review
 
-After designing the interface, ask:
+After implementing the interface, ask:
 
 ### Remove the border
 
@@ -753,6 +835,8 @@ Also check:
 * Did I use emoji or arbitrary Unicode as an icon?
 * Did I add visual elements only because the page felt empty?
 * Does the interface still feel like the same product?
+* Does the implementation preserve the structure and interaction confirmed during prototype review?
+* Did I introduce any new structural or interaction changes that were not validated?
 
 ---
 
@@ -775,5 +859,7 @@ Also check:
 **Do not add dependencies or UI systems without a reason.**
 
 **Design for the product's workflow, not for common AI-generated templates.**
+
+**When meaningful uncertainty can be tested cheaply, validate the design with a small prototype before implementation.**
 
 **If a visual element does not communicate information, establish hierarchy, or support interaction, it probably does not need to be there.**
